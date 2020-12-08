@@ -8,24 +8,29 @@ namespace RPToolkit
     {
         public void OnRoundStart()
         {
+            Commands.PunchCommand.Cooldowned.Clear();
         }
 
         public void OnRoundEnd(RoundEndedEventArgs ev)
         {
+            foreach(CoroutineHandle handle in Commands.PunchCommand.Cooldowned.Values)
+            {
+                Timing.KillCoroutines(handle);
+            }
+            Commands.PunchCommand.Cooldowned.Clear();
         }
 
         public void OnRoleChange(ChangingRoleEventArgs ev)
         {
             Timing.CallDelayed(0.5f, () =>
               {
-                  if (Plugin.Instance.Config.WalkSpeedMultipliers.ContainsKey(ev.NewRole))
+                  if (Commands.PunchCommand.Cooldowned.ContainsKey(ev.Player))
                   {
-                      ev.Player.SendCustomSyncVar(ServerConfigSynchronizer.Singleton.netIdentity, typeof(ServerConfigSynchronizer), nameof(ServerConfigSynchronizer.Singleton.NetworkHumanWalkSpeedMultiplier), Plugin.Instance.Config.WalkSpeedMultipliers[ev.NewRole]);
+                      Timing.KillCoroutines(Commands.PunchCommand.Cooldowned[ev.Player]);
+                      Commands.PunchCommand.Cooldowned.Remove(ev.Player);
                   }
-                  if (Plugin.Instance.Config.SprintSpeedMultipliers.ContainsKey(ev.NewRole))
-                  {
-                      ev.Player.SendCustomSyncVar(ServerConfigSynchronizer.Singleton.netIdentity, typeof(ServerConfigSynchronizer), nameof(ServerConfigSynchronizer.Singleton.NetworkHumanSprintSpeedMultiplier), Plugin.Instance.Config.SprintSpeedMultipliers[ev.NewRole]);
-                  }
+                  ev.Player.SendCustomSyncVar(ServerConfigSynchronizer.Singleton.netIdentity, typeof(ServerConfigSynchronizer), nameof(ServerConfigSynchronizer.Singleton.NetworkHumanWalkSpeedMultiplier), Util.GetFinalSpeedMultiplier(ev.Player.ReferenceHub,false));
+                  ev.Player.SendCustomSyncVar(ServerConfigSynchronizer.Singleton.netIdentity, typeof(ServerConfigSynchronizer), nameof(ServerConfigSynchronizer.Singleton.NetworkHumanSprintSpeedMultiplier), Util.GetFinalSpeedMultiplier(ev.Player.ReferenceHub, true));
                   ev.Player.PlayerInfoArea = PlayerInfoArea.Badge | PlayerInfoArea.CustomInfo | PlayerInfoArea.Nickname | PlayerInfoArea.PowerStatus | PlayerInfoArea.Role | PlayerInfoArea.UnitName;
                   if (Plugin.Instance.Config.HiddenPlayerInfoElements.ContainsKey(ev.NewRole))
                   {
@@ -117,6 +122,15 @@ namespace RPToolkit
                     }
                 }
             }
+        }
+
+        public void OnChangingItem(ChangingItemEventArgs ev)
+        {
+            Timing.CallDelayed(0.1f, () =>
+            {
+                ev.Player.SendCustomSyncVar(ServerConfigSynchronizer.Singleton.netIdentity, typeof(ServerConfigSynchronizer), nameof(ServerConfigSynchronizer.Singleton.NetworkHumanWalkSpeedMultiplier), Util.GetFinalSpeedMultiplier(ev.Player.ReferenceHub, false));
+                ev.Player.SendCustomSyncVar(ServerConfigSynchronizer.Singleton.netIdentity, typeof(ServerConfigSynchronizer), nameof(ServerConfigSynchronizer.Singleton.NetworkHumanSprintSpeedMultiplier), Util.GetFinalSpeedMultiplier(ev.Player.ReferenceHub, true));
+            }); 
         }
     }
 }

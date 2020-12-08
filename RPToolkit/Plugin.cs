@@ -56,6 +56,7 @@ namespace RPToolkit
 
                 Handlers.Player.ChangingRole += EventHandlers.OnRoleChange;
                 Handlers.Player.PickingUpItem += EventHandlers.OnItemPickup;
+                Handlers.Player.ChangingItem += EventHandlers.OnChangingItem;
 
                 Log.Info($"RPToolkit plugin loaded. @gamehunt");
             }
@@ -75,6 +76,7 @@ namespace RPToolkit
 
             Handlers.Player.ChangingRole -= EventHandlers.OnRoleChange;
             Handlers.Player.PickingUpItem -= EventHandlers.OnItemPickup;
+            Handlers.Player.ChangingItem -= EventHandlers.OnChangingItem;
 
             Instance = null;
             Harmony = null;

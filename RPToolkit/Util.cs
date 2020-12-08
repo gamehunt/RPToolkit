@@ -44,13 +44,29 @@ namespace RPToolkit
             return format;
         }
 
-        public static float GetFinalSpeedMultiplier(ReferenceHub rhub)
+        public static string GetNickname(Player player)
+        {
+            if (Plugin.Instance.Config.CustomNameFormat.ContainsKey(player.Role))
+            {
+                if (Plugin.Instance.Config.CustomNameType == Util.CustomNameType.DisplayNickname)
+                {
+                    return player.DisplayNickname;
+                }
+                else
+                {
+                    return player.CustomPlayerInfo;
+                }
+            }
+            return player.Nickname;
+        }
+
+        public static float GetFinalSpeedMultiplier(ReferenceHub rhub, bool sprint)
         {
             Player player = Player.Get(rhub);
             float mul = 1f;
             if (!player.IsScp)
             {
-                if (!player.Stamina.AllowMaxSpeed)
+                if (!sprint)
                 {
                     if (Plugin.Instance.Config.WalkSpeedMultipliers.ContainsKey(player.Role))
                     {

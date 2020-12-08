@@ -9,7 +9,7 @@ namespace RPToolkit.Harmony
         {
             if (isServerSide)
             {
-                speed *= Util.GetFinalSpeedMultiplier(__instance.hub) / (__instance.staminaController.AllowMaxSpeed ? ServerConfigSynchronizer.Singleton.HumanSprintSpeedMultiplier : ServerConfigSynchronizer.Singleton.HumanWalkSpeedMultiplier);
+                speed *= Util.GetFinalSpeedMultiplier(__instance.hub, __instance.staminaController.AllowMaxSpeed) / (__instance.staminaController.AllowMaxSpeed ? ServerConfigSynchronizer.Singleton.HumanSprintSpeedMultiplier : ServerConfigSynchronizer.Singleton.HumanWalkSpeedMultiplier);
             }
         }
     }

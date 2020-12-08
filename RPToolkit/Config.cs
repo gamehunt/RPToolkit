@@ -290,5 +290,32 @@ Harvey
             }
         };
 
+        public float PunchRange { get; set; } = 5f;
+        public float PunchCooldown { get; set; } = 3f;
+
+        public Dictionary<RoleType, float> PunchDamage { get; set; } = new Dictionary<RoleType, float>()
+        {
+            { RoleType.ClassD, 5f },
+            { RoleType.Scientist, 5f },
+            { RoleType.ChaosInsurgency, 15f },
+            { RoleType.FacilityGuard, 10f },
+            { RoleType.NtfCadet, 10f },
+            { RoleType.NtfLieutenant, 15f },
+            { RoleType.NtfScientist, 15f },
+            { RoleType.NtfCommander, 15f }
+        };
+
+        public float StealRange { get; set; } = 2f;
+        public float StealCooldown { get; set; } = 30f;
+        public Dictionary<RoleType, float> StealChance { get; set; } = new Dictionary<RoleType, float>()
+        {
+            { RoleType.ClassD, 5f },
+            { RoleType.Scientist, 5f },
+        };
+
+        public string StealerBroadcastSuccess { get; set; } = "You successfully stole things of %name%";
+        public string StealerBroadcastFail { get; set; } = "Failed to steal things!";
+        public string StealVictimBroadcastSuccess { get; set; } = "Somebody stole your things!";
+        public string StealVictimBroadcastFail { get; set; } = "%name% tried to steal your things!";
     }
 }
